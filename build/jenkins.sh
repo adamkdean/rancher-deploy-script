@@ -30,7 +30,8 @@ BODY="{ \"inServiceStrategy\": { \
 #echo "[BODY is]"
 #echo $BODY
 
-echo $ACTIONS_UPGRADE | cut -f1 -d"/v1"
+UPGRADE_URL="$RANCHER_LOC/v1${ACTIONS_UPGRADE#*/v1}"
+echo $UPGRADE_URL
 
 # echo "[Posting to $ACTIONS_UPGRADE]"
 # echo ${ACTIONS_UPGRADE/RANCHER_HOST/RANCHER_ACCESS}
