@@ -7,6 +7,8 @@ SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
+ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]')
+
 UPGRADE_BATCH_SIZE=1
 UPGRADE_INTERVAL_MILLIS=2000
 UPGRADE_START_FIRST="false"
@@ -20,4 +22,5 @@ BODY="{ inServiceStrategy: { \
   launchConfig: $UPGRADE_LC, \
   secondaryLaunchConfigs: $UPGRADE_SLC } }"
 
-echo $BODY
+echo $ACTIONS_UPGRADE
+# echo $BODY
