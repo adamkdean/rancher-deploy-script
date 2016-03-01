@@ -11,11 +11,11 @@ SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
-LINKS_SELF==$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
-ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
+#LINKS_SELF==$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
+#ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 
 echo "LINKS_SELF"
-echo $LINKS_SELF
+echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]'
 exit 1
 
 UPGRADE_BATCH_SIZE=1
