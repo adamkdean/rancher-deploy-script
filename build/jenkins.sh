@@ -36,22 +36,23 @@ BODY="{ \"inServiceStrategy\": { \
   \"secondaryLaunchConfigs\": $UPGRADE_SLC } }"
 
 echo "[Upgrading $SERVICE_NAME]"
-curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_URL
+RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_URL)
 
 echo "[Waiting for service $SERVICE_NAME to upgrade]"
 wait4upgrade() {
     CNT=0
     STATE=""
     until [[ $STATE -eq "upgraded" ]]; do
-        STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
+        # STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
+
         echo -n "."
-        [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
+        [ $((CNT++)) -gt 3 ] && STATE="upgraded" || sleep 1
     done
     sleep 1
 }
 wait4upgrade
 
-curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//'
+# curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//'
 
 #ACTIONS_FINISH_UPGRADE=$(curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 #echo "DONE, ACTIONS_FINISH_UPGRADE is $ACTIONS_FINISH_UPGRADE"
