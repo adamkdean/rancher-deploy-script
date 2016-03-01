@@ -27,4 +27,4 @@ BODY="{ inServiceStrategy: { \
 # echo $BODY
 
 echo "[Posting to $ACTIONS_UPGRADE]"
-curl --data $BODY $ACTIONS_UPGRADE
+curl --data "$BODY" $ACTIONS_UPGRADE
