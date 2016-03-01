@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "NOT IMPLEMENTED"
+echo "NOT IMPLEMENTED YET"
 exit 1
