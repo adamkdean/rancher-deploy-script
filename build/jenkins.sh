@@ -15,7 +15,7 @@ STATE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["state"]' | sed -e 's/^"//'  
 LINKS_SELF=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
 ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 
-if [[ $STATE -ne "active" ]]; then
+if [[ $STATE != "active" ]]; then
   echo "Service $SERVICE_NAME is $STATE, not active, cannot upgrade"
   exit 1
 fi
