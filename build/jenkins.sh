@@ -41,8 +41,7 @@ echo "[Waiting for service $SERVICE_NAME to upgrade]"
 wait4upgrade() {
     CNT=0
     STATE=""
-    until STATE="upgraded"
-    do
+    until [[ $STATE -eq "upgraded" ]]; do
         STATE=$(curl $LINKS_SELF | jsonq 'obj["state"]')
         echo -n "."
         [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
