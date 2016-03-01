@@ -7,8 +7,9 @@ SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
-LC=$(jsonq 'obj["data"][0]["launchConfig"]')
+LC=$(jsonq 'obj["data"][0]')
 
+#["launchConfig"]
 echo $LC
 
  #python -c 'import json,sys;obj=json.load(sys.stdin);sys.stdout.write(json.dumps(obj["data"][0]))'
