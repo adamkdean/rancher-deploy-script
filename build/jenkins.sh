@@ -40,18 +40,17 @@ RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_
 
 echo "[Waiting for service $SERVICE_NAME to upgrade]"
 wait4upgrade() {
-  echo "WAIT4UPGRADE"
   CNT=0
-  STATE="nope"
+  STATE=""
   until [[ $STATE == "upgraded" ]]; do
-    # STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
-    echo "XXXXXX $STATE XXXXXX"
-    [ $((CNT++)) -gt 3 ] && STATE="upgraded" || sleep 1
+    STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
+    echo "Service state: $STATE"
+    [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
   done
 }
 wait4upgrade
 
-# curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//'
+curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//'
 
 #ACTIONS_FINISH_UPGRADE=$(curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 #echo "DONE, ACTIONS_FINISH_UPGRADE is $ACTIONS_FINISH_UPGRADE"
