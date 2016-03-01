@@ -43,14 +43,28 @@ wait4upgrade() {
   CNT=0
   STATE=""
   until [[ $STATE == "upgraded" ]]; do
-    STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
+    STATE=$(curl --silent $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
     echo "Service state: $STATE"
     [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
   done
 }
 wait4upgrade
 
-curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//'
+FINISH_UPGRADE_URL=$(curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
+echo "[Confirming upgrade via $FINISH_UPGRADE_URL]"
+RESPONSE=$(curl -X POST $FINISH_UPGRADE_URL)
 
-#ACTIONS_FINISH_UPGRADE=$(curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
-#echo "DONE, ACTIONS_FINISH_UPGRADE is $ACTIONS_FINISH_UPGRADE"
+echo "[Waiting for service $SERVICE_NAME to finish upgrade]"
+wait4finishupgrade() {
+  CNT=0
+  STATE=""
+  until [[ $STATE == "active" ]]; do
+    STATE=$(curl --silent $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
+    echo "Service state: $STATE"
+    [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
+  done
+}
+wait4finishupgrade
+
+echo "[ALL DONE]"
+exit 0
