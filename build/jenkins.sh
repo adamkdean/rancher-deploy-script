@@ -12,18 +12,19 @@ SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
 STATE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["state"]' | sed -e 's/^"//'  -e 's/"$//')
-LINKS_SELF=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
-ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
+SELF=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
 
 if [[ $STATE != "active" ]]; then
-  echo "Service $SERVICE_NAME is $STATE, not active, cannot upgrade"
+  echo "[ERROR] Service $SERVICE_NAME state is '$STATE', must be set to 'active'"
   exit 1
 fi
+
 
 UPGRADE_BATCH_SIZE=1
 UPGRADE_INTERVAL_MILLIS=2000
 UPGRADE_START_FIRST="false"
-#UPGRADE_URL="$RANCHER_LOC/v1${ACTIONS_UPGRADE#*/v1}"
+UPGRADE_URL=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
+#UPGRADE_URL="$RANCHER_LOC/v1${UPGRADE_URL#*/v1}"
 UPGRADE_LC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["launchConfig"]')
 UPGRADE_SLC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["secondaryLaunchConfigs"]')
 
@@ -35,7 +36,7 @@ BODY="{ \"inServiceStrategy\": { \
   \"secondaryLaunchConfigs\": $UPGRADE_SLC } }"
 
 echo "[Upgrading $SERVICE_NAME]"
-curl -H "Content-Type: application/json" -X POST -d "$BODY" $ACTIONS_UPGRADE
+curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_URL
 
 echo "[Waiting for service $SERVICE_NAME to upgrade]"
 wait4upgrade() {
