@@ -11,6 +11,7 @@ SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
+LINKS_SELF==$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
 ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 # ACTIONS_FINISH_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 
@@ -28,8 +29,21 @@ BODY="{ \"inServiceStrategy\": { \
   \"launchConfig\": $UPGRADE_LC, \
   \"secondaryLaunchConfigs\": $UPGRADE_SLC } }"
 
-echo "[BODY is]"
-echo $BODY
-
-echo "[Posting to $UPGRADE_URL]"
+echo "[Upgrading $SERVICE_NAME]"
 curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_URL
+
+echo "[Waiting for service $SERVICE_NAME to upgrade]"
+wait4upgrade() {
+    CNT=0
+    STATE=""
+    until STATE="upgraded"
+    do
+        STATE=$(curl $LINKS_SELF | jsonq 'obj["state"]')
+        echo -n "."
+        [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
+    done
+    sleep 1
+}
+wait4upgrade
+
+echo "DONE!"
