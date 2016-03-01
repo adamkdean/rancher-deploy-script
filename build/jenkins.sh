@@ -14,6 +14,10 @@ SERVICE_JSON=$(curl $SERVICE_URL)
 LINKS_SELF==$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//')
 ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 
+echo "LINKS_SELF"
+echo $LINKS_SELF
+exit 1
+
 UPGRADE_BATCH_SIZE=1
 UPGRADE_INTERVAL_MILLIS=2000
 UPGRADE_START_FIRST="false"
@@ -45,7 +49,7 @@ wait4upgrade() {
 }
 wait4upgrade
 
-curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]'
+#curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]'
 
 #ACTIONS_FINISH_UPGRADE=$(curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 #echo "DONE, ACTIONS_FINISH_UPGRADE is $ACTIONS_FINISH_UPGRADE"
