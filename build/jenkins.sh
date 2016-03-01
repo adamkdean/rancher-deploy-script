@@ -7,9 +7,11 @@ SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
-LC=$(jsonq 'obj["data"][0]')
+LC=$(python -c 'import json,sys;obj=json.load(sys.stdin);sys.stdout.write(json.dumps(obj["data"][0]["launchConfig"]))')
+SLC=$(python -c 'import json,sys;obj=json.load(sys.stdin);sys.stdout.write(json.dumps(obj["data"][0]["secondaryLaunchConfigs"]))')
 
-#["launchConfig"]
+echo '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
 echo $LC
-
- #python -c 'import json,sys;obj=json.load(sys.stdin);sys.stdout.write(json.dumps(obj["data"][0]))'
+echo '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
+echo $SLC
+echo '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
