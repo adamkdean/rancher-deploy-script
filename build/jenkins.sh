@@ -32,4 +32,4 @@ echo "[BODY is]"
 echo $BODY
 
 echo "[Posting to $UPGRADE_URL]"
-curl --data "$BODY" $UPGRADE_URL
+curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_URL
