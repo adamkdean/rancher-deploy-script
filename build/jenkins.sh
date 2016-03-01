@@ -43,7 +43,7 @@ wait4upgrade() {
   echo "WAIT4UPGRADE"
   CNT=0
   STATE="nope"
-  until [[ $STATE -eq "upgraded" ]]; do
+  until [[ $STATE == "upgraded" ]]; do
     # STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
     echo "XXXXXX $STATE XXXXXX"
     [ $((CNT++)) -gt 3 ] && STATE="upgraded" || sleep 1
