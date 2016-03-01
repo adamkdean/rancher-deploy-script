@@ -43,7 +43,7 @@ wait4upgrade() {
     CNT=0
     STATE=""
     until [[ $STATE -eq "upgraded" ]]; do
-        STATE=$(curl $LINKS_SELF | jsonq 'obj["state"]')
+        STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
         echo -n "."
         [ $((CNT++)) -gt 60 ] && exit 1 || sleep 1
     done
@@ -51,7 +51,7 @@ wait4upgrade() {
 }
 wait4upgrade
 
-curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]'
+curl $SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//'
 
 #ACTIONS_FINISH_UPGRADE=$(curl $LINKS_SELF | jsonq 'obj["actions"]["finishupgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 #echo "DONE, ACTIONS_FINISH_UPGRADE is $ACTIONS_FINISH_UPGRADE"
