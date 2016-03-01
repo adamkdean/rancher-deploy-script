@@ -2,7 +2,11 @@
 
 jsonq() { python -c "import sys,json; obj=json.load(sys.stdin); sys.stdout.write(json.dumps($1))"; }
 
-RANCHER_LOC="http://$RANCHER_ACCESS_KEY:$RANCHER_SECRET_KEY@192.168.1.48"
+RANCHER_PROTO="http"
+RANCHER_HOST="192.168.1.48"
+RANCHER_ACCESS="$RANCHER_ACCESS_KEY:$RANCHER_SECRET_KEY@$RANCHER_HOST"
+RANCHER_LOC"$RANCHER_PROTO://$RANCHER_ACCESS"
+
 SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
@@ -26,5 +30,8 @@ BODY="{ \"inServiceStrategy\": { \
 echo "[BODY is]"
 echo $BODY
 
+#RANCHER_LOC
+
 echo "[Posting to $ACTIONS_UPGRADE]"
-curl --data "body=$BODY" $ACTIONS_UPGRADE
+echo ${ACTIONS_UPGRADE/RANCHER_HOST/RANCHER_ACCESS}
+#curl --data "body=$BODY" $ACTIONS_UPGRADE
