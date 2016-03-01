@@ -40,15 +40,14 @@ RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$BODY" $UPGRADE_
 
 echo "[Waiting for service $SERVICE_NAME to upgrade]"
 wait4upgrade() {
-    CNT=0
-    STATE=""
-    until [[ $STATE -eq "upgraded" ]]; do
-        # STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
-
-        echo -n "."
-        [ $((CNT++)) -gt 3 ] && STATE="upgraded" || sleep 1
-    done
-    sleep 1
+  echo "WAIT4UPGRADE"
+  CNT=0
+  STATE="nope"
+  until [[ $STATE -eq "upgraded" ]]; do
+    # STATE=$(curl $SELF | jsonq 'obj["state"]' | sed -e 's/^"//'  -e 's/"$//')
+    echo "XXXXXX $STATE XXXXXX"
+    [ $((CNT++)) -gt 3 ] && STATE="upgraded" || sleep 1
+  done
 }
 wait4upgrade
 
