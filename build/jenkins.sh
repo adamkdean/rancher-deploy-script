@@ -8,6 +8,7 @@ SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
 ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]')
+ACTIONS_FINISH_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["finishupgrade"]')
 
 UPGRADE_BATCH_SIZE=1
 UPGRADE_INTERVAL_MILLIS=2000
@@ -22,5 +23,8 @@ BODY="{ inServiceStrategy: { \
   launchConfig: $UPGRADE_LC, \
   secondaryLaunchConfigs: $UPGRADE_SLC } }"
 
-echo $ACTIONS_UPGRADE
+# echo $ACTIONS_UPGRADE
 # echo $BODY
+
+echo "[Posting to $ACTIONS_UPGRADE]"
+curl --data $BODY $ACTIONS_UPGRADE
