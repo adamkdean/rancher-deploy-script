@@ -27,10 +27,12 @@ BODY="{ \"inServiceStrategy\": { \
   \"launchConfig\": $UPGRADE_LC, \
   \"secondaryLaunchConfigs\": $UPGRADE_SLC } }"
 
-echo "[BODY is]"
-echo $BODY
+#echo "[BODY is]"
+#echo $BODY
 
-#RANCHER_LOC
+echo $ACTIONS_UPGRADE
+echo $RANCHER_HOST
+echo $RANCHER_ACCESS
 
 echo "[Posting to $ACTIONS_UPGRADE]"
 echo ${ACTIONS_UPGRADE/RANCHER_HOST/RANCHER_ACCESS}
