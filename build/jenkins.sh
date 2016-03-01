@@ -16,12 +16,7 @@ UPGRADE_START_FIRST="false"
 UPGRADE_LC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["launchConfig"]')
 UPGRADE_SLC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["secondaryLaunchConfigs"]')
 
-BODY="{ inServiceStrategy: { \
-  batchSize: $UPGRADE_BATCH_SIZE, \
-  intervalMillis: $UPGRADE_INTERVAL_MILLIS, \
-  startFirst: $UPGRADE_START_FIRST, \
-  launchConfig: $UPGRADE_LC, \
-  secondaryLaunchConfigs: $UPGRADE_SLC } }"
+BODY='{ "inServiceStrategy": { "batchSize": $UPGRADE_BATCH_SIZE, "intervalMillis": $UPGRADE_INTERVAL_MILLIS, "startFirst": $UPGRADE_START_FIRST, "launchConfig": $UPGRADE_LC,  "secondaryLaunchConfigs": $UPGRADE_SLC } }'
 
 # echo $ACTIONS_UPGRADE
 echo $BODY
