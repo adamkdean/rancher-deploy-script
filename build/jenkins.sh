@@ -23,8 +23,8 @@ BODY="{ \"inServiceStrategy\": { \
   \"launchConfig\": $UPGRADE_LC, \
   \"secondaryLaunchConfigs\": $UPGRADE_SLC } }"
 
-# echo $ACTIONS_UPGRADE
+echo "[BODY is]"
 echo $BODY
 
 echo "[Posting to $ACTIONS_UPGRADE]"
-#curl --data "$BODY" $ACTIONS_UPGRADE
+curl --data "$BODY" $ACTIONS_UPGRADE
