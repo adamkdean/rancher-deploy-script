@@ -15,7 +15,7 @@ SERVICE_JSON=$(curl $SERVICE_URL)
 #ACTIONS_UPGRADE=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["actions"]["upgrade"]' | sed -e 's/^"//'  -e 's/"$//')
 
 echo "LINKS_SELF"
-echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]'
+echo $SERVICE_JSON | jsonq 'obj["data"][0]["links"]["self"]' | sed -e 's/^"//'  -e 's/"$//'
 exit 1
 
 UPGRADE_BATCH_SIZE=1
