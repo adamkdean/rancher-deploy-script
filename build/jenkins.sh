@@ -30,10 +30,8 @@ BODY="{ \"inServiceStrategy\": { \
 #echo "[BODY is]"
 #echo $BODY
 
-echo $ACTIONS_UPGRADE
-echo $RANCHER_HOST
-echo $RANCHER_ACCESS
+echo $ACTIONS_UPGRADE | cut -f1 -d"/v1"
 
-echo "[Posting to $ACTIONS_UPGRADE]"
-echo ${ACTIONS_UPGRADE/RANCHER_HOST/RANCHER_ACCESS}
+# echo "[Posting to $ACTIONS_UPGRADE]"
+# echo ${ACTIONS_UPGRADE/RANCHER_HOST/RANCHER_ACCESS}
 #curl --data "body=$BODY" $ACTIONS_UPGRADE
