@@ -7,14 +7,17 @@ SERVICE_NAME="alpine-nginx"
 SERVICE_URL="$RANCHER_LOC/v1/services?name=$SERVICE_NAME"
 SERVICE_JSON=$(curl $SERVICE_URL)
 
-LC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["launchConfig"]')
-SLC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["secondaryLaunchConfigs"]')
+UPGRADE_BATCH_SIZE=1
+UPGRADE_INTERVAL_MILLIS=2000
+UPGRADE_START_FIRST="false"
+UPGRADE_LC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["launchConfig"]')
+UPGRADE_SLC=$(echo $SERVICE_JSON | jsonq 'obj["data"][0]["secondaryLaunchConfigs"]')
 
-# LC=$(echo $SERVICE_JSON | python -c 'import json,sys;obj=json.load(sys.stdin);sys.stdout.write(json.dumps(obj["data"][0]["launchConfig"]))')
-# SLC=$(echo $SERVICE_JSON | python -c 'import json,sys;obj=json.load(sys.stdin);sys.stdout.write(json.dumps(obj["data"][0]["secondaryLaunchConfigs"]))')
+BODY="{ inServiceStrategy: { \
+  batchSize: $UPGRADE_BATCH_SIZE, \
+  intervalMillis: $UPGRADE_INTERVAL_MILLIS, \
+  startFirst: $UPGRADE_START_FIRST, \
+  launchConfig: $LC, \
+  secondaryLaunchConfigs: $UPGRADE_SLC } }"
 
-echo '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
-echo $LC
-echo '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
-echo $SLC
-echo '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
+echo $BODY
