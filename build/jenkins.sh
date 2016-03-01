@@ -27,4 +27,4 @@ echo "[BODY is]"
 echo $BODY
 
 echo "[Posting to $ACTIONS_UPGRADE]"
-curl --data "$BODY" $ACTIONS_UPGRADE
+curl --data "body=$BODY" $ACTIONS_UPGRADE
