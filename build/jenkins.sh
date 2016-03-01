@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# MAINTAINER: Adam K Dean
+# TODO:
+#  - tidy up
+#  - handle auth properly
+#  - handle rollbacks?
 
 jsonq() { python -c "import sys,json; obj=json.load(sys.stdin); sys.stdout.write(json.dumps($1))"; }
 
@@ -18,7 +24,6 @@ if [[ $STATE != "active" ]]; then
   echo "[ERROR] Service $SERVICE_NAME state is '$STATE', must be set to 'active'"
   exit 1
 fi
-
 
 UPGRADE_BATCH_SIZE=1
 UPGRADE_INTERVAL_MILLIS=2000
